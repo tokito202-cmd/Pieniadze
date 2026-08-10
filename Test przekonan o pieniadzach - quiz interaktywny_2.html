@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test przekonań o pieniądzach</title>
+<style>
+  :root{
+    --olive:#5F6B3E;
+    --olive-dark:#3E451F;
+    --terracotta:#B5603C;
+    --terracotta-light:#D98F6C;
+    --gold:#C79A3E;
+    --cream:#FBF6EC;
+    --box:#F4EFE2;
+    --ink:#2E2A22;
+    --line:#CBB98F;
+    --muted:#7A7160;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:720px;
+    margin:0 auto;
+    padding:36px 22px 80px;
+  }
+  h1,h2,h3{
+    font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+    color:var(--olive-dark);
+    margin:0 0 8px 0;
+    font-weight:700;
+  }
+  .eyebrow{
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    margin:0 0 10px 0;
+  }
+  .sub{
+    font-family:Georgia,serif;
+    font-style:italic;
+    color:var(--terracotta);
+    font-size:16px;
+    margin:0 0 18px 0;
+  }
+  .rule{
+    border:none;
+    border-top:1px solid var(--gold);
+    margin:16px 0 26px 0;
+  }
+  p{ line-height:1.6; font-size:15px; }
+  .muted{ color:var(--muted); font-size:13.5px; line-height:1.55; }
+
+  /* progress */
+  .progress-track{
+    position:sticky; top:0; z-index:10;
+    background:var(--cream);
+    padding-top:14px; padding-bottom:10px;
+  }
+  .progress-bar{
+    height:4px; width:100%; background:var(--box);
+    border-radius:4px; overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; background:var(--terracotta);
+    transition:width .4s ease;
+  }
+  .progress-label{
+    font-size:12px; color:var(--muted); margin-top:8px;
+    display:flex; justify-content:space-between;
+  }
+
+  /* screens */
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  /* intro */
+  .intro-orn{
+    display:flex; justify-content:center; margin:28px 0 8px;
+  }
+  .intro-orn svg{ width:120px; height:120px; }
+  .btn{
+    display:inline-block;
+    font-family:-apple-system,sans-serif;
+    font-size:14.5px; font-weight:700;
+    letter-spacing:.02em;
+    padding:13px 26px;
+    border-radius:2px;
+    border:1.4px solid var(--olive-dark);
+    background:var(--olive-dark);
+    color:var(--cream);
+    cursor:pointer;
+    transition:background .2s,color .2s,transform .1s;
+  }
+  .btn:hover{ background:var(--olive); }
+  .btn:active{ transform:scale(.98); }
+  .btn.ghost{
+    background:transparent; color:var(--olive-dark); border-color:var(--line);
+  }
+  .btn.ghost:hover{ background:var(--box); }
+  .btn[disabled]{ opacity:.35; cursor:not-allowed; }
+  .btn-row{ display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; }
+  .btn-row.center{ justify-content:center; }
+
+  .legend{
+    text-align:center;
+    font-weight:700; color:var(--terracotta);
+    font-size:13.5px;
+    background:var(--box);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:12px 14px;
+    margin:18px 0;
+  }
+
+  /* statements */
+  .cat-label{ font-size:11.5px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--terracotta); margin-bottom:4px; }
+  .statement{
+    margin:22px 0 22px 0;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--line);
+  }
+  .statement:last-child{ border-bottom:none; }
+  .statement p{ margin:0 0 12px 0; font-size:15px; }
+  .scale{
+    display:flex; gap:10px;
+  }
+  .scale button{
+    flex:1;
+    aspect-ratio:1;
+    max-width:56px;
+    border-radius:50%;
+    border:1.6px solid var(--line);
+    background:#fff;
+    font-family:Georgia,serif;
+    font-weight:700;
+    font-size:16px;
+    color:var(--olive-dark);
+    cursor:pointer;
+    transition:all .15s;
+  }
+  .scale button:hover{ border-color:var(--terracotta); }
+  .scale button.selected{
+    background:var(--terracotta);
+    border-color:var(--terracotta);
+    color:#fff;
+    transform:scale(1.08);
+  }
+  .scale-caption{
+    display:flex; justify-content:space-between;
+    font-size:10.5px; color:var(--muted); margin-top:6px;
+  }
+
+  /* results */
+  .score-hero{
+    text-align:center;
+    padding:22px 18px 26px;
+    background:var(--box);
+    border:1px solid var(--line);
+    border-radius:6px;
+    margin:18px 0 26px;
+  }
+  .score-hero .big{
+    font-family:Georgia,serif; font-weight:700;
+    font-size:52px; color:var(--olive-dark); line-height:1;
+  }
+  .score-hero .of{ font-size:16px; color:var(--muted); }
+
+  .radar-wrap{ display:flex; justify-content:center; margin:20px 0 6px;}
+
+  .cat-block{
+    margin:26px 0; padding:18px 18px 6px;
+    border:1px solid var(--line); border-radius:6px; background:#fff;
+  }
+  .cat-block h3{ font-size:17px; margin-bottom:2px; }
+  .cat-score-row{
+    display:flex; align-items:center; gap:10px; margin:8px 0 12px;
+  }
+  .bar-track{
+    flex:1; height:9px; background:var(--box); border-radius:5px; overflow:hidden;
+  }
+  .bar-fill{ height:100%; background:var(--terracotta); border-radius:5px; }
+  .cat-score-num{ font-weight:700; color:var(--olive-dark); font-size:13.5px; min-width:52px; text-align:right; }
+  .tier-text{ font-size:14px; line-height:1.55; margin:6px 0 14px; }
+  .tier-badge{
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; padding:3px 9px; border-radius:20px; margin-bottom:8px;
+  }
+  .tier-badge.low{ background:#E7EEDC; color:var(--olive-dark); }
+  .tier-badge.mid{ background:#F3E6C9; color:#7A5A15; }
+  .tier-badge.high{ background:#F1DACB; color:var(--terracotta); }
+
+  .signals{ margin:8px 0 26px; }
+  .signal-item{
+    padding:12px 14px; margin-bottom:10px;
+    background:var(--box); border-left:3px solid var(--terracotta);
+    border-radius:0 4px 4px 0;
+  }
+  .signal-item .stmt{ font-weight:700; font-size:13.8px; margin-bottom:4px; }
+  .signal-item .insight{ font-size:13.4px; color:var(--ink); line-height:1.5; }
+  .signal-item .score-tag{
+    display:inline-block; margin-left:6px; font-size:11px;
+    color:var(--terracotta); font-weight:700;
+  }
+
+  .priority-list{ margin:0; padding:0; list-style:none; }
+  .priority-list li{
+    display:flex; align-items:baseline; gap:12px;
+    padding:10px 0; border-bottom:1px solid var(--line);
+  }
+  .priority-list li:last-child{ border-bottom:none; }
+  .priority-rank{
+    font-family:Georgia,serif; font-weight:700; color:var(--terracotta);
+    font-size:20px; min-width:26px;
+  }
+
+  .final-note{
+    margin-top:30px; padding:16px 18px;
+    border:1px dashed var(--line); border-radius:6px;
+    font-size:13.8px; line-height:1.6; color:var(--ink); background:#fff;
+  }
+
+  footer{ text-align:center; color:var(--muted); font-size:11.5px; margin-top:50px; }
+
+  @media print{
+    .no-print{ display:none !important; }
+    body{ background:#fff; }
+    .screen{ display:none !important; }
+    .screen.active{ display:block !important; }
+  }
+
+  @media (max-width:420px){
+    .scale button{ font-size:13px; }
+    .score-hero .big{ font-size:42px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="progress-track no-print" id="progressTrack" style="display:none;">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label"><span id="progressLabel">Obszar 1 / 5</span><span id="progressPct">0%</span></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="screen active" id="screen-intro">
+    <h1 style="font-size:32px;">Test przekonań<br>o pieniądzach</h1>
+    <p class="sub">30 stwierdzeń · 5 obszarów · Twój osobisty wynik</p>
+    <hr class="rule">
+    <div class="intro-orn">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="42" fill="none" stroke="#C79A3E" stroke-width="1"/>
+        <circle cx="60" cy="60" r="30" fill="none" stroke="#C79A3E" stroke-width="0.7"/>
+        <text x="60" y="68" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="26" fill="#5F6B3E">$</text>
+        <g fill="#B5603C">
+          <rect x="55" y="6" width="10" height="10" transform="rotate(45 60 11)"/>
+          <rect x="55" y="104" width="10" height="10" transform="rotate(45 60 109)"/>
+          <rect x="6" y="55" width="10" height="10" transform="rotate(45 11 60)"/>
+          <rect x="104" y="55" width="10" height="10" transform="rotate(45 109 60)"/>
+        </g>
+      </svg>
+    </div>
+    <p>Poniżej znajdziesz 30 stwierdzeń podzielonych na pięć obszarów. Przy każdym z nich wybierz liczbę
+    od 1 do 5, która najlepiej opisuje, jak bardzo się z nim identyfikujesz.</p>
+    <div class="legend">① zupełnie mnie nie dotyczy &nbsp;-&nbsp; ③ czasami tak bywa &nbsp;-&nbsp; ⑤ bardzo mnie dotyczy</div>
+    <p class="muted">Odpowiadaj szybko, pierwszą myślą, bez oceniania siebie. To nie test, który można
+    „zaliczyć”, to zdjęcie punktu, w którym jesteś dziś. Na końcu otrzymasz szczegółową, spersonalizowaną
+    interpretację dla każdego obszaru, opartą na Twoich konkretnych odpowiedziach.</p>
+    <div class="btn-row">
+      <button class="btn" onclick="startQuiz()">Zaczynam →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ STEPS (generated) -->
+  <div id="quiz-steps"></div>
+
+  <!-- RESULTS -->
+  <div class="screen" id="screen-results"></div>
+
+  <footer class="no-print">Materiały do pracy własnej - edycja prywatna</footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA
+   ========================================================= */
+const CATEGORIES = [
+  {
+    key:"niedostatek", no:"I", title:"Niedostatek i strach",
+    tiers:[
+      {max:14, label:"niski", cls:"low", text:"Temat niedostatku rzadko Cię dziś przytłacza, masz stosunkowo spokojny, ugruntowany stosunek do tego, czy pieniędzy „wystarczy”."},
+      {max:22, label:"średni", cls:"mid", text:"Strach o pieniądze odwiedza Cię częściej, niż chciałabyś, zwłaszcza w chwilach niepewności. Warto zauważać, kiedy konkretnie się pojawia."},
+      {max:30, label:"wysoki", cls:"high", text:"Niedostatek i strach są dziś bardzo obecne w Twoim myśleniu o pieniądzach, to naturalny obszar, od którego można zacząć pracę."}
+    ],
+    statements:[
+      {t:"Czuję dyskomfort, gdy myślę o stanie swojego konta.", i:"Samo sprawdzanie liczb wywołuje u Ciebie napięcie w ciele, jeszcze zanim zobaczysz wynik, to sygnał, że temat pieniędzy jest dla Ciebie związany z czujnością, nie tylko z liczbami."},
+      {t:"Zdarza mi się mówić lub myśleć „nie wystarczy”, „zabraknie”.", i:"To zdanie prawdopodobnie towarzyszy Ci od dawna, warto sprawdzić, czy dziś jest oparte na faktach, czy na starym przekonaniu."},
+      {t:"Martwię się o pieniądze częściej, niż chciałabym/chciałbym.", i:"Zamartwianie się kosztuje energię, która mogłaby iść w konkretne działanie, to jeden z najbardziej „drenujących” wzorców w tym obszarze."},
+      {t:"Podejmuję decyzje finansowe pod wpływem strachu, nie spokoju.", i:"Decyzje podjęte ze strachu rzadko są tymi, z których jesteśmy zadowoleni długofalowo, warto zauważać moment, w którym strach „przejmuje kierownicę”."},
+      {t:"Czuję niepokój, myśląc o swojej przyszłości finansowej.", i:"Niepokój o przyszłość często maskuje coś bardziej konkretnego, spróbuj dopytać się siebie, czego naprawdę się boisz, gdy myślisz „przyszłość finansowa”."},
+      {t:"Wierzę, że pieniędzy zawsze będzie za mało dla wszystkich.", i:"To przekonanie o ograniczonej ilości dobra na świecie wpływa nie tylko na Twoje finanse, ale też na to, jak reagujesz na sukces innych ludzi."}
+    ]
+  },
+  {
+    key:"kontrola", no:"II", title:"Kontrola i sztywność",
+    tiers:[
+      {max:14, label:"niski", cls:"low", text:"Masz sporo elastyczności i zaufania do tego, że finanse „się ułożą”, rzadko potrzebujesz twardej kontroli."},
+      {max:22, label:"średni", cls:"mid", text:"Kontrola bywa dla Ciebie sposobem radzenia sobie z niepewnością, działa, ale bywa też kosztowna energetycznie."},
+      {max:30, label:"wysoki", cls:"high", text:"Silna potrzeba kontroli finansowej dziś często kosztuje Cię spokój, to obszar, w którym warto poszukać większej lekkości."}
+    ],
+    statements:[
+      {t:"Muszę mieć pełną kontrolę nad każdym wydatkiem, żeby się nie bać.", i:"Kontrola bywa tu formą uspokajania się, działa krótkoterminowo, ale rzadko daje trwałe poczucie bezpieczeństwa."},
+      {t:"Trudno mi zaufać, że coś „samo się ułoży” finansowo.", i:"Brak zaufania do procesu często idzie w parze z przekonaniem, że jesteś jedyną osobą, która może zadbać o swoje bezpieczeństwo."},
+      {t:"Planuję finanse z dużym wyprzedzeniem, bo boję się niespodzianek.", i:"Planowanie samo w sobie jest zdrowe, ale sprawdź, czy robisz to z poczucia sprawczości, czy z lęku przed tym, co nieprzewidziane."},
+      {t:"Czuję dyskomfort, gdy plany finansowe nagle się zmieniają.", i:"Zmiana planu potrafi być odczuwana jak utrata kontroli nad całym życiem, nie tylko nad budżetem."},
+      {t:"Rzadko pozwalam sobie na spontaniczne zakupy czy przyjemności.", i:"Odmawianie sobie spontaniczności to często cena, jaką płacisz za poczucie bezpieczeństwa, warto zapytać, czy to wciąż uczciwa transakcja."},
+      {t:"Mam wrażenie, że jeśli odpuszczę kontrolę, wszystko się posypie.", i:"To przekonanie zakłada, że jesteś jedyną siłą utrzymującą porządek, sprawdź, ile w tym prawdy, a ile starego wzorca."}
+    ]
+  },
+  {
+    key:"wartosc", no:"III", title:"Wartość własna i zasługiwanie",
+    tiers:[
+      {max:14, label:"niski", cls:"low", text:"Masz zdrowe poczucie własnej wartości finansowej, łatwo Ci uznać, że zasługujesz na to, co zarabiasz."},
+      {max:22, label:"średni", cls:"mid", text:"Czasem porównujesz się do innych albo nie doceniasz swojej pracy tak, jak mogłabyś."},
+      {max:30, label:"wysoki", cls:"high", text:"Poczucie „niezasługiwania” jest dziś silne, to prawdopodobnie jeden z najważniejszych obszarów do pracy."}
+    ],
+    statements:[
+      {t:"Czuję się niezręcznie, mówiąc głośno o swoich zarobkach.", i:"Dyskomfort przy temacie zarobków często nie dotyczy liczb, a tego, czy czujesz się „uprawniona” do posiadania ich tyle, ile masz."},
+      {t:"Zdarza mi się przyjmować niższą cenę, niż jestem warta/y.", i:"To jeden z najbardziej kosztownych wzorców, bo utrwala się każdym razem, kiedy się powtarza."},
+      {t:"Wierzę, że muszę „zasłużyć” na duże pieniądze ciężką pracą.", i:"To przekonanie łączy pieniądze z cierpieniem, sprawdź, czy naprawdę wierzysz, że łatwość i obfitość się wykluczają."},
+      {t:"Trudno mi uwierzyć, że zasługuję na wysokie zarobki bez wyrzeczeń.", i:"Zasługiwanie „bez wyrzeczeń” może brzmieć podejrzanie po latach przekonania, że trzeba za wszystko płacić trudem."},
+      {t:"Porównuję swoje zarobki do innych i wypadam w tym porównaniu gorzej.", i:"Porównywanie się rzadko uwzględnia pełny kontekst czyjejś sytuacji, Twój punkt odniesienia może być nieuczciwie wybrany."},
+      {t:"Czuję się winna/y, gdy zarabiam więcej niż osoby mi bliskie.", i:"Poczucie winy za sukces bywa sposobem na to, by nie „oddalić się” od bliskich, ale w praktyce często oddala bardziej niż sam sukces."}
+    ]
+  },
+  {
+    key:"przyjmowanie", no:"IV", title:"Przyjmowanie i przepływ",
+    tiers:[
+      {max:14, label:"niski", cls:"low", text:"Umiesz przyjmować, komplementy, pomoc, odpoczynek, z otwartością i bez większego oporu."},
+      {max:22, label:"średni", cls:"mid", text:"Przyjmowanie bywa dla Ciebie niewygodne, zwłaszcza gdy nie możesz się „odwdzięczyć” od razu."},
+      {max:30, label:"wysoki", cls:"high", text:"Przyjmowanie jest dla Ciebie dziś trudne, prawdopodobnie łatwiej Ci dawać niż otrzymywać."}
+    ],
+    statements:[
+      {t:"Czuję dyskomfort, przyjmując komplementy lub pochwały.", i:"Trudność w przyjmowaniu słownego uznania jest zwykle tą samą blokadą, która utrudnia przyjmowanie pieniędzy."},
+      {t:"Trudno mi prosić o pomoc finansową, nawet gdy jej potrzebuję.", i:"Samodzielność jest cenna, ale gdy staje się jedyną opcją, zamienia się w izolację."},
+      {t:"Wolę dawać, niż przyjmować.", i:"Dawanie bywa bezpieczniejsze, bo stawia Cię w roli silnej, kontrolującej strony relacji, przyjmowanie wymaga innego rodzaju odwagi."},
+      {t:"Czuję się winna/y, przyjmując prezenty, za które nie mogę się odwdzięczyć.", i:"To przekonanie zamienia dary w dług, sprawdź, czy druga strona naprawdę oczekuje „rozliczenia”."},
+      {t:"Rzadko pozwalam sobie na odpoczynek bez poczucia, że „powinnam pracować”.", i:"Odpoczynek bez poczucia winy jest formą przyjmowania, jeśli jest trudny, to sygnał, że wzorzec sięga głębiej niż finanse."},
+      {t:"Mam trudność z cieszeniem się tym, co już mam, zamiast gonić za „więcej”.", i:"Gonitwa za „więcej” czasem nie kończy się na żadnej konkretnej liczbie, dlatego warto sprawdzić, czego naprawdę szukasz."}
+    ]
+  },
+  {
+    key:"relacje", no:"V", title:"Wina, wstyd i relacje",
+    tiers:[
+      {max:14, label:"niski", cls:"low", text:"Pieniądze rzadko są dla Ciebie źródłem wstydu czy konfliktu w relacjach."},
+      {max:22, label:"średni", cls:"mid", text:"Czasem unikasz tematu pieniędzy w relacjach albo czujesz z nim związany dyskomfort."},
+      {max:30, label:"wysoki", cls:"high", text:"Wina i wstyd wokół pieniędzy silnie wpływają na Twoje relacje, warto zacząć o tym rozmawiać, choćby z samą sobą."}
+    ],
+    statements:[
+      {t:"Pieniądze bywają źródłem konfliktów w moich relacjach.", i:"Konflikty o pieniądze rzadko są tylko o pieniądzach, często kryją się za nimi różnice w poczuciu bezpieczeństwa lub wartości."},
+      {t:"Czuję wstyd, gdy nie mogę sobie na coś pozwolić.", i:"Wstyd finansowy często wynika z porównywania swojego wnętrza z czyimś zewnętrzem, a to nigdy nie jest uczciwe porównanie."},
+      {t:"Unikam rozmów o pieniądzach z bliskimi osobami.", i:"Unikanie tematu bywa próbą ochrony relacji, ale zwykle prowadzi do większego napięcia w długim terminie."},
+      {t:"Zdarza mi się oceniać innych po tym, ile zarabiają.", i:"Ocenianie innych przez pieniądze to często odzwierciedlenie tego, jak oceniamy samych siebie w tym temacie."},
+      {t:"Czuję się nieswojo, gdy kto inny płaci za mnie.", i:"Dyskomfort w przyjmowaniu w relacji jest zwykle tą samą blokadą, co trudność w przyjmowaniu pieniędzy w ogóle."},
+      {t:"Boję się, że więcej pieniędzy zmieniłoby mnie w gorszą osobę.", i:"To przekonanie każe wybierać między pieniędzmi i dobrym charakterem, a to fałszywy wybór, który sam w sobie odpycha obfitość."}
+    ]
+  }
+];
+
+const OVERALL_BANDS = [
+  {max:70, text:"Twoja relacja z pieniędzmi jest dziś stosunkowo spokojna i elastyczna, ograniczające przekonania rzadko przejmują u Ciebie kontrolę. To nie znaczy, że nie ma nic do zrobienia, ale pracujesz dziś z solidnego, stabilnego fundamentu."},
+  {max:110, text:"Masz mieszaną relację z pieniędzmi, w części obszarów czujesz swobodę, w innych wciąż pojawia się silne napięcie. To bardzo częsty, „ludzki” wynik: nikt nie ma jednej, jednorodnej relacji z pieniędzmi we wszystkich obszarach życia naraz."},
+  {max:150, text:"Ograniczające przekonania o pieniądzach są dziś bardzo aktywne i prawdopodobnie kosztują Cię sporo codziennej energii. To nie powód do niepokoju, to bardzo uczciwy, konkretny punkt wyjścia do pracy, którą teraz widzisz czarno na białym."}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const answers = {}; // key: "catIndex-stmtIndex" -> 1..5
+let currentStep = 0; // 0..4 = category steps
+
+/* =========================================================
+   BUILD QUIZ STEPS
+   ========================================================= */
+const stepsContainer = document.getElementById('quiz-steps');
+
+CATEGORIES.forEach((cat, ci)=>{
+  const div = document.createElement('div');
+  div.className = 'screen';
+  div.id = 'screen-step-'+ci;
+
+  let html = `<div class="cat-label">Obszar ${cat.no} · 6 stwierdzeń</div><h2>${cat.title}</h2><hr class="rule">`;
+
+  cat.statements.forEach((s, si)=>{
+    const id = ci+'-'+si;
+    html += `
+      <div class="statement">
+        <p>${s.t}</p>
+        <div class="scale" data-id="${id}">
+          ${[1,2,3,4,5].map(v=>`<button type="button" onclick="selectAnswer('${id}',${v},this)">${v}</button>`).join('')}
+        </div>
+      </div>`;
+  });
+
+  html += `<div class="btn-row">
+      ${ci>0 ? `<button class="btn ghost" onclick="goStep(${ci-1})">← Wstecz</button>` : ''}
+      <button class="btn" id="next-${ci}" onclick="goStep(${ci+1})" disabled>${ci<4 ? 'Dalej →' : 'Zobacz wynik →'}</button>
+    </div>`;
+
+  div.innerHTML = html;
+  stepsContainer.appendChild(div);
+});
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+function startQuiz(){
+  document.getElementById('screen-intro').classList.remove('active');
+  document.getElementById('progressTrack').style.display='block';
+  goStep(0);
+}
+
+function selectAnswer(id, value, btn){
+  answers[id] = value;
+  const group = btn.parentElement;
+  [...group.children].forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  checkStepComplete(parseInt(id.split('-')[0]));
+}
+
+function checkStepComplete(ci){
+  const need = CATEGORIES[ci].statements.length;
+  let count = 0;
+  for(let si=0; si<need; si++){
+    if(answers[ci+'-'+si] !== undefined) count++;
+  }
+  const btn = document.getElementById('next-'+ci);
+  if(btn) btn.disabled = (count < need);
+}
+
+function goStep(n){
+  document.querySelectorAll('#quiz-steps .screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-results').classList.remove('active');
+
+  if(n >= CATEGORIES.length){
+    renderResults();
+    document.getElementById('screen-results').classList.add('active');
+    document.getElementById('progressTrack').style.display='none';
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  currentStep = n;
+  document.getElementById('screen-step-'+n).classList.add('active');
+  checkStepComplete(n);
+  updateProgress(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProgress(n){
+  const pct = Math.round(((n)/CATEGORIES.length)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = `Obszar ${n+1} / ${CATEGORIES.length}`;
+  document.getElementById('progressPct').textContent = pct+'%';
+}
+
+/* =========================================================
+   SCORING + RESULTS
+   ========================================================= */
+function getCategoryScore(ci){
+  const cat = CATEGORIES[ci];
+  let sum = 0;
+  cat.statements.forEach((s,si)=>{ sum += (answers[ci+'-'+si] || 0); });
+  return sum;
+}
+
+function getTier(cat, score){
+  for(const t of cat.tiers){ if(score <= t.max) return t; }
+  return cat.tiers[cat.tiers.length-1];
+}
+
+function polar(cx,cy,r,angleDeg){
+  const rad = (angleDeg-90) * Math.PI/180;
+  return [cx + r*Math.cos(rad), cy + r*Math.sin(rad)];
+}
+
+function buildRadar(scores){
+  const cx=150, cy=150, maxR=120, minR=18;
+  const n = scores.length;
+  const angleStep = 360/n;
+
+  let gridRings = [0.25,0.5,0.75,1].map(f=>{
+    const pts = scores.map((_,i)=>{
+      const r = minR + (maxR-minR)*f;
+      return polar(cx,cy,r,i*angleStep).join(',');
+    }).join(' ');
+    return `<polygon points="${pts}" fill="none" stroke="#CBB98F" stroke-width="0.6" opacity="0.6"/>`;
+  }).join('');
+
+  let axes = scores.map((_,i)=>{
+    const [x,y] = polar(cx,cy,maxR,i*angleStep);
+    return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#CBB98F" stroke-width="0.6" opacity="0.6"/>`;
+  }).join('');
+
+  let dataPts = scores.map((s,i)=>{
+    const frac = (s-6)/(30-6); // normalize 6..30 -> 0..1
+    const r = minR + (maxR-minR)*Math.max(frac,0.04);
+    return polar(cx,cy,r,i*angleStep);
+  });
+  let dataPoly = dataPts.map(p=>p.join(',')).join(' ');
+
+  let dots = dataPts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#B5603C"/>`).join('');
+
+  let labels = CATEGORIES.map((c,i)=>{
+    const [x,y] = polar(cx,cy,maxR+26,i*angleStep);
+    return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle"
+      font-family="Georgia,serif" font-weight="700" font-size="13" fill="#3E451F">${c.no}</text>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 300 300" width="300" height="300">
+    <circle cx="${cx}" cy="${cy}" r="${minR}" fill="none" stroke="#C79A3E" stroke-width="1"/>
+    ${gridRings}
+    ${axes}
+    <polygon points="${dataPoly}" fill="#B5603C" fill-opacity="0.28" stroke="#B5603C" stroke-width="2"/>
+    ${dots}
+    <text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="20" fill="#5F6B3E">$</text>
+    ${labels}
+  </svg>`;
+}
+
+function renderResults(){
+  const scores = CATEGORIES.map((c,ci)=>getCategoryScore(ci));
+  const total = scores.reduce((a,b)=>a+b,0);
+
+  const overall = OVERALL_BANDS.find(b=>total<=b.max) || OVERALL_BANDS[OVERALL_BANDS.length-1];
+
+  // ranking (highest score = most work needed) - descending
+  const ranking = CATEGORIES.map((c,ci)=>({ci, title:c.title, score:scores[ci]}))
+    .sort((a,b)=>b.score-a.score);
+
+  // signals: statements scored >=4
+  let signals = [];
+  CATEGORIES.forEach((cat,ci)=>{
+    cat.statements.forEach((s,si)=>{
+      const v = answers[ci+'-'+si];
+      if(v>=4){ signals.push({t:s.t, i:s.i, v, cat:cat.title}); }
+    });
+  });
+  signals.sort((a,b)=>b.v-a.v);
+
+  let html = `
+    <div class="eyebrow">Twój wynik</div>
+    <h1 style="font-size:28px;">Twoja mapa relacji<br>z pieniędzmi</h1>
+    <p class="sub">Interpretacja oparta na Twoich konkretnych odpowiedziach</p>
+    <hr class="rule">
+
+    <div class="score-hero">
+      <div class="big">${total}</div>
+      <div class="of">z 150 punktów</div>
+    </div>
+    <p>${overall.text}</p>
+
+    <div class="radar-wrap">${buildRadar(scores)}</div>
+    <p class="muted" style="text-align:center;">Im dalej wierzchołek od środka, tym silniej ograniczające
+    przekonania są aktywne w danym obszarze.</p>
+  `;
+
+  html += `<h2 style="margin-top:34px;">Szczegółowo, obszar po obszarze</h2>`;
+
+  CATEGORIES.forEach((cat, ci)=>{
+    const score = scores[ci];
+    const tier = getTier(cat, score);
+    const pct = Math.round(((score-6)/24)*100);
+    html += `
+      <div class="cat-block">
+        <div class="cat-label">Obszar ${cat.no}</div>
+        <h3>${cat.title}</h3>
+        <div class="cat-score-row">
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <div class="cat-score-num">${score} / 30</div>
+        </div>
+        <span class="tier-badge ${tier.cls}">wynik ${tier.label}</span>
+        <p class="tier-text">${tier.text}</p>
+      </div>`;
+  });
+
+  if(signals.length){
+    html += `<h2 style="margin-top:34px;">Twoje najsilniejsze sygnały</h2>
+      <p class="muted">Stwierdzenia, które zaznaczyłaś jako „bardzo mnie dotyczy” lub bliskie temu,
+      z dedykowanym, bardziej osobistym komentarzem do każdego z nich.</p>
+      <div class="signals">`;
+    signals.slice(0,10).forEach(s=>{
+      html += `<div class="signal-item">
+        <div class="stmt">${s.t}<span class="score-tag">${s.v}/5</span></div>
+        <div class="insight">${s.i}</div>
+      </div>`;
+    });
+    html += `</div>`;
+    if(signals.length>10){
+      html += `<p class="muted">...i ${signals.length-10} więcej stwierdzeń z wysoką oceną, im więcej ich
+      zaznaczyłaś, tym więcej materiału do pracy masz dziś na talerzu (to dobra wiadomość, nie zła).</p>`;
+    }
+  } else {
+    html += `<h2 style="margin-top:34px;">Twoje najsilniejsze sygnały</h2>
+      <p>Żadne stwierdzenie nie zebrało u Ciebie wysokiej oceny, to znak, że dziś nie masz silnie
+      aktywnych, dominujących blokad w żadnym z obszarów. Warto mimo to zerknąć na obszar z najwyższym
+      wynikiem poniżej.</p>`;
+  }
+
+  html += `<h2 style="margin-top:34px;">Kolejność, w której warto pracować</h2>
+    <p class="muted">Od obszaru, który dziś najbardziej „woła” o uwagę, do tego, który jest już
+    najbardziej uporządkowany.</p>
+    <ol class="priority-list">`;
+  ranking.forEach((r,idx)=>{
+    html += `<li><span class="priority-rank">${idx+1}</span><span>${r.title} - <b>${r.score}/30</b></span></li>`;
+  });
+  html += `</ol>`;
+
+  const top = ranking[0];
+  html += `<div class="final-note">
+    <b>Twój priorytet numer jeden: „${top.title}”.</b> To obszar, w którym ograniczające przekonania są
+    dziś najbardziej aktywne i najbardziej „słyszalne”, naturalne miejsce, od którego warto zacząć
+    dalszą pracę. Warto powtórzyć ten test za 2–3 miesiące, żeby zobaczyć, jak zmienia się Twoja mapa.
+  </div>`;
+
+  html += `<div class="btn-row center no-print">
+    <button class="btn" onclick="downloadResults()">Zapisz wynik jako plik</button>
+    <button class="btn ghost" onclick="restartQuiz()">Zacznij od nowa</button>
+  </div>`;
+
+  document.getElementById('screen-results').innerHTML = html;
+}
+
+function downloadResults(){
+  try{
+    const src = document.getElementById('screen-results');
+    const clone = src.cloneNode(true);
+    clone.querySelectorAll('.no-print').forEach(el=>el.remove());
+    const styleTag = document.querySelector('style').outerHTML;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pl-PL');
+
+    const docHtml = `<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wynik - Test przekonań o pieniądzach</title>
+${styleTag}
+</head>
+<body>
+<div class="wrap">
+  <p class="muted" style="margin-bottom:0;">Wynik zapisany: ${dateStr}</p>
+  <div class="screen active">${clone.innerHTML}</div>
+</div>
+</body>
+</html>`;
+
+    const blob = new Blob([docHtml], {type:'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'wynik-test-przekonan-o-pieniadzach.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  }catch(err){
+    alert('Nie udało się zapisać pliku automatycznie. Możesz zaznaczyć wynik na stronie i skopiować go ręcznie (Ctrl+A, Ctrl+C), albo zrobić zrzut ekranu.');
+    console.error(err);
+  }
+}
+
+function restartQuiz(){
+  for(const k in answers){ delete answers[k]; }
+  document.querySelectorAll('.scale button.selected').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('[id^="next-"]').forEach(b=>b.disabled=true);
+  document.getElementById('screen-results').classList.remove('active');
+  document.getElementById('progressTrack').style.display='none';
+  document.getElementById('screen-intro').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
